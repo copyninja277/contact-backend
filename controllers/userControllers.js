@@ -2,6 +2,7 @@ const asynchandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModels");
+const nodemailer = require("nodemailer");
 //@desc Register a user
 //@route POST /api/users/register
 //@access public
@@ -71,6 +72,40 @@ const LoginUser =asynchandler( async(req,res)=>{
 //@access private
 const currentUser =asynchandler( async(req,res)=>{
     res.json(req.user);
+});
+
+
+//@desc current user OTP verification
+//@route POST /api/users/send-otp
+//@access private
+const Otpchecker =asynchandler(async (req, res) => {
+  const { email, otp } = req.body;
+
+  if (!email || !otp) {
+    return res.status(400).json({ message: "Email and OTP are required." });
+  }
+
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      }
+    });
+
+    await transporter.sendMail({
+      from: `"ContactKeeper OTP" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Your OTP for ContactKeeper",
+      text: `Your OTP code is: ${otp}`
+    });
+
+    return res.status(200).json({ message: "OTP sent to email." });
+  } catch (error) {
+    console.error("OTP email error:", error);
+    return res.status(500).json({ message: "Failed to send OTP email." });
+  }
 });
 
 module.exports = {registerUser, LoginUser, currentUser};
