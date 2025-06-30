@@ -108,4 +108,4 @@ const Otpchecker =asynchandler(async (req, res) => {
   }
 });
 
-module.exports = {registerUser, LoginUser, currentUser};
+module.exports = {registerUser, LoginUser, currentUser, Otpchecker};
