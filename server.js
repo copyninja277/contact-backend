@@ -15,6 +15,20 @@ app.use(express.json());
 app.use("/api/contacts", require("./routes/contactRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use(errorHandler);
+// Add a simple ping route
+app.get('/', (req, res) => {
+  res.send('Server is running fine ');
+});
+
+// Self-ping every 14 minutes to prevent Render from sleeping
+const SELF_URL = process.env.RENDER_EXTERNAL_URL || 'https://contactkeeper-ulq2.onrender.com';
+
+setInterval(() => {
+  fetch(SELF_URL)
+    .then(() => console.log('Pinged self to stay awake'))
+    .catch(err => console.log('Ping failed:', err.message));
+}, 2 * 60 * 1000); // every 14 minutes
+
 app.listen(port,()=>{
     console.log(`Server running on port ${port}`);
 })
