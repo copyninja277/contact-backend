@@ -20,11 +20,6 @@ app.get('/', (req, res) => {
   res.send('Server is running fine ');
 });
 
-setInterval(() => {
-  fetch(SELF_URL)
-    .then(() => console.log('Pinged self to stay awake'))
-    .catch(err => console.log('Ping failed:', err.message));
-}, 2 * 60 * 1000); // every 14 minutes
 
 app.listen(port,()=>{
     console.log(`Server running on port ${port}`);
