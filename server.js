@@ -16,16 +16,13 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
-app.use("/api/contacts", require("./routes/contactRoutes"));
-app.use("/api/users", require("./routes/userRoutes"));
+app.use("/contacts", require("./routes/contactRoutes"));
+app.use("/users", require("./routes/userRoutes"));
 app.use(errorHandler);
 // Add a simple ping route
 app.get('/', (req, res) => {
   res.send('Server is running fine ');
 });
-
-// Self-ping every 14 minutes to prevent Render from sleeping
-const SELF_URL = process.env.RENDER_EXTERNAL_URL || 'https://contactkeeper-ulq2.onrender.com';
 
 setInterval(() => {
   fetch(SELF_URL)
